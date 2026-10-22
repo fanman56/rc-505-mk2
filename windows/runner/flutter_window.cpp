@@ -2,6 +2,7 @@
 #include <optional>
 #include <vector>
 #include <mutex>
+#include <algorithm>
 #include <windows.h>
 #include <mmsystem.h>
 #include <flutter/event_channel.h>
@@ -12,7 +13,7 @@
 
 #define WM_MIC_DATA (WM_USER + 101)
 static constexpr int kSampleRate = 44100;
-static constexpr int kBlockBytes = 1024; // 512 samples * 2 bytes (16-bit mono)
+static constexpr int kBlockBytes = 1024;
 static constexpr int kNumBufs = 8;
 
 class WinAudioBridge {
@@ -87,7 +88,7 @@ public:
     if (hdr.dwFlags & WHDR_PREPARED) {
       waveOutUnprepareHeader(hOut, &hdr, sizeof(WAVEHDR));
     }
-    size_t sz = min(pcm.size(), sizeof(outBufs[outIdx]));
+    size_t sz = std::min(pcm.size(), sizeof(outBufs[outIdx]));
     memcpy(outBufs[outIdx], pcm.data(), sz);
     ZeroMemory(&hdr, sizeof(WAVEHDR));
     hdr.lpData = outBufs[outIdx];
@@ -118,7 +119,7 @@ bool FlutterWindow::OnCreate() {
   if (!flutter_controller_->engine() || !flutter_controller_->view()) return false;
   RegisterPlugins(flutter_controller_->engine());
 
-  auto messenger = flutter_controller_->engine()->binary_messenger();
+  auto messenger = flutter_controller_->engine()->messenger();
 
   auto audio_ch = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
       messenger, "rc505/audio", &flutter::StandardMethodCodec::GetInstance());
