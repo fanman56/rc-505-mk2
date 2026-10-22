@@ -1,0 +1,28 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Enable Windows Desktop & Build Release
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows --release
+      - name: Zip Windows Release Bundle
+        run: |
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath RC505mkII-Windows-x64.zip
+      - name: Upload Windows .exe Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RC505mkII-Windows-x64
+          path: RC505mkII-Windows-x64.zip
