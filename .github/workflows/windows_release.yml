@@ -1,10 +1,13 @@
-name: Build Windows Executable
+name: Build & Release (Android, Linux, Windows)
 
 on:
   push:
     branches: [ main ]
     tags: [ 'v*' ]
   workflow_dispatch:
+
+permissions:
+  contents: write  # <-- CRITICAL: This allows GitHub Actions to publish releases
 
 jobs:
   build-windows:
