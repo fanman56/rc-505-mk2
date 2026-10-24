@@ -7,6 +7,7 @@
 
 A high-performance, 1:1 feature-complete software replica of the **BOSS RC-505mkII Loop Station**. Built in Flutter and Dart with zero external plugin dependencies, this project features a zero-allocation real-time DSP engine, all 53 hardware effects, per-track isolated FX routing, and native low-latency PCM audio drivers across **Linux**, **Windows**, and **Android**.
 
+![BOSS RC-505mkII Showcase](docs/screenshot.png)
 ---
 
 ## Key Features
